@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "Crane Hire AI - Backend",
+    "name": "Aluguel de Guindaste - Backend",
     "_postman_id": "2f0c4a9d-0000-4000-8000-000000000000",
-    "description": "Collection for testing Crane Hire AI backend (public, protected, admin).\nSet environment variable `baseUrl` to `http://localhost:3000/api` and `authToken` to a valid Bearer token.",
+    "description": "Collection for testing Aluguel de Guindaste backend (public, protected, admin).\nSet environment variable `baseUrl` to `http://localhost:3000/api` and `authToken` to a valid Bearer token.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
