@@ -1,0 +1,104 @@
+{
+  "info": {
+    "name": "Crane Hire AI - Backend",
+    "_postman_id": "2f0c4a9d-0000-4000-8000-000000000000",
+    "description": "Collection for testing Crane Hire AI backend (public, protected, admin).\nSet environment variable `baseUrl` to `http://localhost:3000/api` and `authToken` to a valid Bearer token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Relatorios - Estatisticas Gerais (public)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/relatorios/estatisticas-gerais",
+          "host": [
+            "{{baseUrl}}/relatorios/estatisticas-gerais"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Guindastes - Create (protected)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"modelo\": \"X-100\",\n  \"capacidade_toneladas\": 10\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/guindastes",
+          "host": [
+            "{{baseUrl}}/guindastes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Perfis - Create (admin)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Administradores\",\n  \"descricao\": \"Perfil de administracao local\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/perfis",
+          "host": [
+            "{{baseUrl}}/perfis"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

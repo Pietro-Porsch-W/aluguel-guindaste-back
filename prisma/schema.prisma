@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE")
+}
+
+// Enums
+enum TipoCliente {
+  PESSOA_FISICA
+  PESSOA_JURIDICA
+}
+
+enum TipoGuindaste {
+  MOVEL
+  FIXO
+  SOBRE_ESTEIRAS
+  TRELICADO
+  PORTICO
+  PONTE_ROLANTE
+}
+
+enum StatusGuindaste {
+  DISPONIVEL
+  ALUGADO
+  EM_MANUTENCAO
+  VENDIDO
+}
+
+enum StatusLocacao {
+  PENDENTE
+  ATIVA
+  CONCLUIDA
+  CANCELADA
+}
+
+enum StatusManutencao {
+  AGENDADA
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+}
+
+enum StatusOferta {
+  PENDENTE
+  ACEITA
+  REJEITADA
+  EXPIRADA
+}
+
+// Tabelas principais
+model usuarios {
+  id             String   @id @default(uuid())
+  email          String
+  nome_completo  String
+  id_perfil      String?
+  senha_hash     String
+  ativo          Boolean  @default(true)
+  dt_criacao     DateTime @default(now())
+  dt_atualizacao DateTime @default(now())
+
+  clientes clientes[]
+  perfis   perfis?    @relation(fields: [id_perfil], references: [id])
+}
+
+model perfis {
+  id         String   @id @default(uuid())
+  nome       String
+  descricao  String?
+  dt_created DateTime @default(now())
+  dt_updated DateTime @default(now())
+
+  // Relacionamentos
+  usuarios   usuarios[]
+  permissoes perfil_permissoes[]
+}
+
+model permissao {
+  id         String   @id @default(uuid())
+  nome       String
+  descricao  String?
+  dt_updated DateTime @default(now())
+  dt_created DateTime @default(now())
+
+  // Relacionamentos
+  perfis perfil_permissoes[]
+}
+
+model perfil_permissoes {
+  id          String   @id @default(uuid())
+  perfilId    String
+  permissaoId String
+  createdAt   DateTime @default(now())
+
+  // Relacionamentos
+  perfil    perfis    @relation(fields: [perfilId], references: [id])
+  permissao permissao @relation(fields: [permissaoId], references: [id])
+}
+
+model clientes {
+  id           String      @id @default(uuid())
+  nome         String
+  tipo_cliente TipoCliente
+  documento    String
+  email        String
+  telefone     String
+  endereco     String
+  dt_cadastro  DateTime    @default(now())
+  ativo        Boolean     @default(true)
+  usuarioId    String?
+
+  // Relacionamentos
+  usuario  usuarios?       @relation(fields: [usuarioId], references: [id])
+  locacoes locacoes[]
+  ofertas  ofertas_venda[]
+}
+
+model guindastes {
+  id                      String          @id @default(uuid())
+  modelo                  String
+  capacidade_toneladas    Decimal
+  altura_maxima_metros    Decimal
+  alcance_maximo_metros   Decimal
+  tipo_guindaste          TipoGuindaste
+  ano_fabricacao          Int
+  numero_serie            String
+  localizacao_atual       String
+  disponivel_para_aluguel Boolean         @default(true)
+  disponivel_para_venda   Boolean         @default(false)
+  valor_diaria            Decimal?
+  valor_hora_extra        Decimal?
+  valor_venda             Decimal?
+  data_ultima_manutencao  DateTime?
+  status                  StatusGuindaste @default(DISPONIVEL)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt()
+
+  // Relacionamentos
+  locacoes    locacoes[]
+  manutencoes manutencoes[]
+  ofertas     ofertas_venda[]
+}
+
+model locacoes {
+  id                   String        @id @default(uuid())
+  id_cliente           String
+  id_guindaste         String
+  dt_inicio            DateTime
+  data_fim_prevista    DateTime
+  data_fim_real        DateTime?
+  valor_total_previsto Decimal
+  valor_total_final    Decimal?
+  status_locacao       StatusLocacao @default(PENDENTE)
+  observacoes          String?
+  dt_created           DateTime      @default(now())
+  dt_updated           DateTime      @default(now())
+
+  // Relacionamentos
+  cliente   clientes   @relation(fields: [id_cliente], references: [id])
+  guindaste guindastes @relation(fields: [id_guindaste], references: [id])
+}
+
+model manutencoes {
+  id                     String           @id @default(uuid())
+  id_guindaste           String
+  data_inicio_manutencao DateTime
+  data_fim_manutencao    DateTime?
+  descricao              String
+  custo                  Decimal
+  realizada_por          String
+  status_manutencao      StatusManutencao @default(AGENDADA)
+  dt_created             DateTime         @default(now())
+  dt_updated             DateTime         @default(now())
+
+  // Relacionamentos
+  guindaste guindastes @relation(fields: [id_guindaste], references: [id])
+}
+
+model ofertas_venda {
+  id             String       @id @default(uuid())
+  id_cliente     String?
+  id_guindaste   String
+  data_oferta    DateTime     @default(now())
+  dt_validade    DateTime
+  valor_ofertado Decimal
+  status_oferta  StatusOferta @default(PENDENTE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @default(now())
+
+  // Relacionamentos
+  cliente   clientes?  @relation(fields: [id_cliente], references: [id])
+  guindaste guindastes @relation(fields: [id_guindaste], references: [id])
+}
