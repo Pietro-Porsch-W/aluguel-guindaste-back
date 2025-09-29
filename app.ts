@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import routes from './src/routes'; 
+import routes from './src/routes';
 
 const app = express();
 
-app.use(cors({ origin: ['https://aluguel-guindaste.vercel.app', 'http://localhost:8080'] }));
+app.use(cors({ origin: ['https://aluguel-guindaste-front-production.up.railway.app', 'http://localhost:8080'] }));
 app.use(express.json());
 
 const prefix = process.env.VERCEL === '1' ? '/' : '/api';
