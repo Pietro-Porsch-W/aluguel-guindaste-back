@@ -12,9 +12,9 @@ export const createCliente = async (data: {
 	telefone: string;
 	endereco: string;
 	ativo?: boolean;
-	usuarioId?: string | null;
+	usuarioId?: string;
 }) => {
-	return prisma.clientes.create({ data });
+	return prisma.clientes.create({ data: data as any });
 };
 
 export const updateCliente = async (id: string, updates: Record<string, any>) => {
